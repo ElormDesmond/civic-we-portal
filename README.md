@@ -68,10 +68,6 @@ This project is built using a modern "Go-React" stack, prioritizing performance,
     npm run dev
     ```
 
-## 🔐 Default Credentials
-
-*   **Admin Email:** `admin@municipality.gov`
-*   **Admin Password:** `admin123`
 
 ---
 *Developed with a focus on municipal efficiency and citizen empowerment.*
