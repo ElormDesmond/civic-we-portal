@@ -1,31 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { NotificationProvider } from './context/NotificationContext'
-import Login from './pages/Login'
-import Register from './pages/Register'
 import About from './pages/About'
 import News from './pages/News'
 import Projects from './pages/Projects'
 import Dashboard from './pages/Dashboard'
 import Permits from './pages/Permits'
 import BuildingPermit from './pages/BuildingPermit'
-import ProtectedRoute from './components/ProtectedRoute'
 import SearchBar from './components/SearchBar'
 import './App.css'
 
 const Navigation = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await fetch('http://localhost:8888/api/logout', { method: 'POST', credentials: 'include' });
-      logout();
-      navigate('/login');
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-  };
+  const { user } = useAuth();
 
   return (
     <nav className="flex justify-between items-center p-4 bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
@@ -41,22 +27,12 @@ const Navigation = () => {
         </div>
       </div>
       <div className="space-x-4 flex-shrink-0 flex items-center">
-        {user && user.role === 'citizen' && (
-          <div className="hidden md:flex space-x-4 mr-4">
-            <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Dashboard</Link>
-            <Link to="/apply" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Apply</Link>
-          </div>
-        )}
-        {user ? (
-          <>
-            <span className="text-gray-700 dark:text-gray-300 hidden xl:inline text-sm">Welcome, {user.full_name}</span>
-            <button onClick={handleLogout} className="text-red-600 hover:text-red-500 font-medium text-sm">Logout</button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 text-sm">Login</Link>
-            <Link to="/register" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">Register</Link>
-          </>
+        <div className="hidden md:flex space-x-4 mr-4">
+          <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Dashboard</Link>
+          <Link to="/apply" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Apply</Link>
+        </div>
+        {user && (
+          <span className="text-gray-700 dark:text-gray-300 hidden xl:inline text-sm">Welcome, {user.full_name}</span>
         )}
       </div>
     </nav>
@@ -64,7 +40,6 @@ const Navigation = () => {
 };
 
 const Home = () => {
-  const { user } = useAuth();
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] p-4 text-center">
       <h1 className="text-5xl font-extrabold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -93,16 +68,9 @@ const Home = () => {
       </div>
 
       <div className="space-x-4">
-        {user ? (
-          <Link to="/dashboard" className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
-            Go to Dashboard
-          </Link>
-        ) : (
-          <>
-            <Link to="/register" className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">Get Started</Link>
-            <Link to="/login" className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition">Sign In</Link>
-          </>
-        )}
+        <Link to="/dashboard" className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+          Go to Dashboard
+        </Link>
       </div>
     </div>
   );
@@ -117,18 +85,12 @@ function App() {
             <Navigation />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
               <Route path="/about" element={<About />} />
               <Route path="/news" element={<News />} />
               <Route path="/projects" element={<Projects />} />
-              
-              {/* Citizen Routes */}
-              <Route element={<ProtectedRoute requiredRole="citizen" />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/apply" element={<Permits />} />
-                <Route path="/apply/building" element={<BuildingPermit />} />
-              </Route>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/apply" element={<Permits />} />
+              <Route path="/apply/building" element={<BuildingPermit />} />
             </Routes>
           </div>
         </Router>
