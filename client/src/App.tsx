@@ -10,8 +10,6 @@ import Dashboard from './pages/Dashboard'
 import Permits from './pages/Permits'
 import BuildingPermit from './pages/BuildingPermit'
 import ProtectedRoute from './components/ProtectedRoute'
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminNews from './pages/admin/AdminNews'
 import SearchBar from './components/SearchBar'
 import './App.css'
 
@@ -47,12 +45,6 @@ const Navigation = () => {
           <div className="hidden md:flex space-x-4 mr-4">
             <Link to="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Dashboard</Link>
             <Link to="/apply" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition text-sm font-medium">Apply</Link>
-          </div>
-        )}
-        {user && user.role === 'admin' && (
-          <div className="hidden md:flex items-center space-x-4 mr-4 border-r pr-4 border-gray-200 dark:border-gray-700">
-            <Link to="/admin" className="text-blue-600 hover:text-blue-700 transition text-xs font-bold uppercase tracking-wider">Moderate</Link>
-            <Link to="/admin/news" className="text-blue-600 hover:text-blue-700 transition text-xs font-bold uppercase tracking-wider">News</Link>
           </div>
         )}
         {user ? (
@@ -102,8 +94,8 @@ const Home = () => {
 
       <div className="space-x-4">
         {user ? (
-          <Link to={user.role === 'admin' ? "/admin" : "/dashboard"} className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
-            Go to {user.role === 'admin' ? "Admin Console" : "Dashboard"}
+          <Link to="/dashboard" className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+            Go to Dashboard
           </Link>
         ) : (
           <>
@@ -136,12 +128,6 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/apply" element={<Permits />} />
                 <Route path="/apply/building" element={<BuildingPermit />} />
-              </Route>
-
-              {/* Admin Routes */}
-              <Route element={<ProtectedRoute requiredRole="admin" />}>
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/news" element={<AdminNews />} />
               </Route>
             </Routes>
           </div>
